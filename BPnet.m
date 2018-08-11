@@ -1,14 +1,19 @@
-close all%¹Ø±Õ´ò¿ªµÄfigure
-clear%Çå¿Õ¹¤×÷Çø±äÁ¿
+%----------------------------------------------
+% Date: 14-05-2017
+% Discription: Trained a 2D nonlinear system on MATLAB to model signal functions utilizing BP neural networks.
+% Author: Jierun CHEN
+%----------------------------------------------
+close all%å…³é—­æ‰“å¼€çš„figure
+clear%æ¸…ç©ºå·¥ä½œåŒºå˜é‡
 
 x=(-10:2:10);
 y=(-10:2:10);
-z1=sin(x+eps)./(x+eps);  % epsÎªMATLABµÄ×îĞ¡Êı£¬
-%¼ÓÉÏepsÊÇÎªÁË±ÜÃâ0/0µÄ´íÎó½á¹û£¬±£Ö¤sin(0)/0=1.0
+z1=sin(x+eps)./(x+eps);  % epsä¸ºMATLABçš„æœ€å°æ•°ï¼Œ
+%åŠ ä¸Šepsæ˜¯ä¸ºäº†é¿å…0/0çš„é”™è¯¯ç»“æœï¼Œä¿è¯sin(0)/0=1.0
 z2=sin(y+eps)./(y+eps); 
 z=z1'*z2;
 mesh(x,y,z);
-title('ÑµÁ·Êı¾İ¾«È·½á¹ûÇúÃæ');
+title('è®­ç»ƒæ•°æ®ç²¾ç¡®ç»“æœæ›²é¢');
 
 x2=(-10:0.5:10);
 y2=(-10:0.5:10);
@@ -17,9 +22,9 @@ z2_2=sin(y2+eps)./(y2+eps);
 z_2=z1_2'*z2_2;
 figure;
 mesh(x2,y2,z_2);
-title('²âÊÔÊı¾İ¾«È·½á¹ûÇúÃæ');
+title('æµ‹è¯•æ•°æ®ç²¾ç¡®ç»“æœæ›²é¢');
 
-%µÃµ½ÑµÁ·Êı¾İ¼¯
+%å¾—åˆ°è®­ç»ƒæ•°æ®é›†
 a=size(x,2);
 b=size(y,2);
 trnInput=zeros(2,a*b);
@@ -30,7 +35,7 @@ for i=1:a
     end
 end
 trnOutput=reshape(z,1,a*b); 
-%µÃµ½²âÊÔÊı¾İ¼¯
+%å¾—åˆ°æµ‹è¯•æ•°æ®é›†
 c=size(x2,2);
 d=size(y2,2);
 chkInput=zeros(2,c*d);
@@ -43,30 +48,30 @@ end
 chkOutput=reshape(z_2,1,c*d); 
 
 net=newff([minmax(x);minmax(y)],[20 1],{'tansig','purelin'},'trainlm');
-net=init(net);              %³õÊ¼»¯ÍøÂç
-net.trainParam.show=50;     %Ã¿µü´ú50´ÎÏÔÊ¾Ò»´Î
-net.trainParam.lr=0.05;     %Ñ§Ï°ËÙÂÊ
-net.trainParam.epochs=200;  %ÑµÁ·´ÎÊı
-net.trainParam.goal=0.00001;%Îó²îÖ¸±ê
+net=init(net);              %åˆå§‹åŒ–ç½‘ç»œ
+net.trainParam.show=50;     %æ¯è¿­ä»£50æ¬¡æ˜¾ç¤ºä¸€æ¬¡
+net.trainParam.lr=0.05;     %å­¦ä¹ é€Ÿç‡
+net.trainParam.epochs=200;  %è®­ç»ƒæ¬¡æ•°
+net.trainParam.goal=0.00001;%è¯¯å·®æŒ‡æ ‡
 
 net=train(net,trnInput,trnOutput); 
 
-%ÑµÁ·ºóBPÍøÂçµÄÑµÁ·Êı¾İÊäÈë/Êä³öÇúÃæºÍÊä³öÎó²îÇúÃæ
+%è®­ç»ƒåBPç½‘ç»œçš„è®­ç»ƒæ•°æ®è¾“å…¥/è¾“å‡ºæ›²é¢å’Œè¾“å‡ºè¯¯å·®æ›²é¢
 BPtrnOut=sim(net,trnInput);
 BPtrnOut2=reshape(BPtrnOut',a,b);
 figure;
 mesh(x,y,BPtrnOut2);
-title('ÑµÁ·ºóBPÍøÂçµÄÑµÁ·Êı¾İÊäÈë/Êä³öÇúÃæ');
+title('è®­ç»ƒåBPç½‘ç»œçš„è®­ç»ƒæ•°æ®è¾“å…¥/è¾“å‡ºæ›²é¢');
 figure;
 mesh(x,y,BPtrnOut2-z);
-title('ÑµÁ·ºóBPÍøÂçµÄÑµÁ·Êı¾İÊä³öÎó²îÇúÃæ');
+title('è®­ç»ƒåBPç½‘ç»œçš„è®­ç»ƒæ•°æ®è¾“å‡ºè¯¯å·®æ›²é¢');
 
-%ÑµÁ·ºóBPÍøÂçµÄ²âÊÔÊı¾İÊäÈë/Êä³öÇúÃæºÍÊä³öÎó²îÇúÃæ
+%è®­ç»ƒåBPç½‘ç»œçš„æµ‹è¯•æ•°æ®è¾“å…¥/è¾“å‡ºæ›²é¢å’Œè¾“å‡ºè¯¯å·®æ›²é¢
 BPchkOut=sim(net,chkInput);
 BPchkOut2=reshape(BPchkOut',c,d);
 figure;
 mesh(x2,y2,BPchkOut2);
-title('ÑµÁ·ºóBPÍøÂçµÄ²âÊÔÊı¾İÊäÈë/Êä³öÇúÃæ');
+title('è®­ç»ƒåBPç½‘ç»œçš„æµ‹è¯•æ•°æ®è¾“å…¥/è¾“å‡ºæ›²é¢');
 figure;
 mesh(x2,y2,BPchkOut2-z_2);
-title('ÑµÁ·ºóBPÍøÂçµÄ²âÊÔÊı¾İÊä³öÎó²îÇúÃæ');
+title('è®­ç»ƒåBPç½‘ç»œçš„æµ‹è¯•æ•°æ®è¾“å‡ºè¯¯å·®æ›²é¢');
